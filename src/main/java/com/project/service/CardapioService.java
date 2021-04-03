@@ -13,10 +13,10 @@ import com.project.dto.request.CardapioResquestDTO;
 import com.project.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Objects.isNull;
 
 @Service
 public class CardapioService {
@@ -45,15 +45,14 @@ public class CardapioService {
 
     @Transactional
     public CardapioResponseDTO cadastra(CardapioResquestDTO cardapioResquestDTO) {
-        final Cardapio cardapio = cardapioDtoToEntity(cardapioResquestDTO);
+        final Cardapio cardapio = cardapioDtoToEntity(new Cardapio(), cardapioResquestDTO);
         return entityToCardapioDto(cardapioRepository.save(cardapio));
     }
 
     @Transactional
-    public CardapioResponseDTO adicionaItem(Long idCardapio, CardapioItemRequestDTO cardapioItemRequestDTO) {
-        Cardapio cardapio = buscaPorId(idCardapio);
-        CardapioItem cardapioItem = cardapioItemDtoToEntity(cardapio, cardapioItemRequestDTO);
-        cardapio.getItens().add(cardapioItem);
+    public CardapioResponseDTO atualiza(Long idCardapio, CardapioResquestDTO cardapioResquestDTO) {
+        validaAtualizacao(idCardapio);
+        Cardapio cardapio = cardapioDtoToEntity(buscaPorId(idCardapio), cardapioResquestDTO);
 
         return entityToCardapioDto(cardapioRepository.save(cardapio));
     }
@@ -61,23 +60,41 @@ public class CardapioService {
     @Transactional
     public void desativaCardapio(Long idCardapio) {
         Cardapio cardapio = buscaPorId(idCardapio);
+
+        if(SituacaoCardapio.DESABILITADO.getCodigo().equals(cardapio.getSitucaoCardapio())) {
+            throw new BusinessException("Cardapio já está Desativado");
+        }
+
         cardapio.setDataFim(LocalDateTime.now());
         cardapio.setSitucaoCardapio(SituacaoCardapio.DESABILITADO.getCodigo());
         cardapioRepository.save(cardapio);
     }
 
-    private Cardapio cardapioDtoToEntity(CardapioResquestDTO cardapioResquestDTO) {
-        Cardapio cardapio = Cardapio.builder()
-                .descricao(cardapioResquestDTO.getDescricao())
-                .dataInicio(cardapioResquestDTO.getDataInicio())
-                .dataFim(cardapioResquestDTO.getDataFim())
-                .situcaoCardapio(cardapioResquestDTO.getSitucaoCardapio())
-                .build();
+    @Transactional
+    public void ativaCardapio(Long idCardapio) {
+        Cardapio cardapio = buscaPorId(idCardapio);
+
+        if(SituacaoCardapio.ATIVO.getCodigo().equals(cardapio.getSitucaoCardapio())) {
+            throw new BusinessException("Cardapio já está Ativado");
+        }
+
+        cardapio.setDataFim(null);
+        cardapio.setSitucaoCardapio(SituacaoCardapio.ATIVO.getCodigo());
+        cardapioRepository.save(cardapio);
+    }
+
+    private Cardapio cardapioDtoToEntity(Cardapio cardapio, CardapioResquestDTO cardapioResquestDTO) {
+        cardapio.setDescricao(cardapioResquestDTO.getDescricao());
+        cardapio.setDataInicio(cardapioResquestDTO.getDataInicio());
+        cardapio.setDataFim(cardapioResquestDTO.getDataFim());
+        cardapio.setSitucaoCardapio(cardapioResquestDTO.getSitucaoCardapio());
+
 
         List<CardapioItem> cardapioItens = new ArrayList<>();
         cardapioResquestDTO.getItens().forEach(cardapioItemRequestDTO -> cardapioItens.add(cardapioItemDtoToEntity(cardapio,cardapioItemRequestDTO)));
 
-        cardapio.setItens(cardapioItens);
+        cardapio.getItens().clear();
+        cardapio.getItens().addAll(cardapioItens);
         return cardapio;
     }
 
@@ -115,5 +132,12 @@ public class CardapioService {
 
     private Item buscaItemPorId(Long id) {
         return itemRepository.findById(id).orElseThrow(() -> new BusinessException("Item não encontrado"));
+    }
+
+    private void validaAtualizacao(Long idCardapio) {
+        Cardapio cardapio = buscaPorId(idCardapio);
+        if(isNull(cardapio)) {
+           throw new BusinessException("Cardápio não encontrado");
+        }
     }
 }

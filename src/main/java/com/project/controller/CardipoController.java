@@ -21,7 +21,6 @@ public class CardipoController {
         this.cardapioService = cardapioService;
     }
 
-
     @GetMapping
     public ResponseEntity<ResponseDTO<List<CardapioResponseDTO>>> consultaTodos() {
 
@@ -44,15 +43,23 @@ public class CardipoController {
                              .body(new ResponseDTO<>(cardapioResponseDTO));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO<Void>> adicionaItem(@PathVariable Long id, @RequestBody CardapioItemRequestDTO cardapioItemRequestDTO) {
-        cardapioService.adicionaItem(id, cardapioItemRequestDTO);
-        return ResponseEntity.noContent().build();
-    }
-
     @PostMapping("/{id}/desativar")
     public ResponseEntity<Void> desativarCardapio(@PathVariable Long id) {
         cardapioService.desativaCardapio(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/ativar")
+    public ResponseEntity<Void> ativarCardapio(@PathVariable Long id) {
+        cardapioService.ativaCardapio(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDTO<CardapioResponseDTO>> atualiza(@PathVariable Long id, @RequestBody CardapioResquestDTO cardapioResquestDTO) {
+        final CardapioResponseDTO cardapioResponseDTO = cardapioService.atualiza(id, cardapioResquestDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseDTO<>(cardapioResponseDTO));
+    }
+
 }
