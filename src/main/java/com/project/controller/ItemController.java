@@ -24,6 +24,12 @@ public class ItemController {
         return ResponseEntity.ok(new ResponseDTO<>(itemsResponseDTO));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDTO<ItemResponseDTO>> consultaById(@PathVariable Long id) {
+        final ItemResponseDTO itemResponseDTO = itemService.consultaById(id);
+        return ResponseEntity.ok(new ResponseDTO<>(itemResponseDTO));
+    }
+
     @PostMapping
     public ResponseEntity<ResponseDTO<ItemResponseDTO>> cadastraItem(@RequestBody ItemRequestDTO itemRequestDTO) {
         final ItemResponseDTO itemResponseDTO = itemService.cadastraItem(itemRequestDTO);

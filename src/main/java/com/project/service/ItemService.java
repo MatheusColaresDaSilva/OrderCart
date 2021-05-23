@@ -3,6 +3,7 @@ package com.project.service;
 import com.project.dto.request.ItemRequestDTO;
 import com.project.dto.response.ItemResponseDTO;
 import com.project.entity.Item;
+import com.project.exception.BusinessException;
 import com.project.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class ItemService {
         return itemsResponseDTO;
     }
 
+    public ItemResponseDTO consultaById(Long id) {
+        final Item item = buscaPorId(id);
+        return entityToItemDto(item);
+    }
+
     public ItemResponseDTO cadastraItem(ItemRequestDTO itemRequestDTO) {
         Item item = itemDtoToEntity(new Item(), itemRequestDTO);
         return entityToItemDto(itemRepository.save(item));
@@ -39,5 +45,9 @@ public class ItemService {
                         .id(item.getId())
                         .descricao(item.getDescricao())
                         .build();
+    }
+
+    private Item buscaPorId(Long id) {
+        return itemRepository.findById(id).orElseThrow(() -> new BusinessException("Item não Encontrado"));
     }
 }
