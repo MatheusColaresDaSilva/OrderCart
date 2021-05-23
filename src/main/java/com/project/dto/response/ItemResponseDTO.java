@@ -1,4 +1,4 @@
-package com.project.dto.request;
+package com.project.dto.response;
 
 import lombok.*;
 
@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class ItemRequestDTO {
+public class ItemResponseDTO {
+    private Long id;
     private String descricao;
 }
