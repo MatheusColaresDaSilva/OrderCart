@@ -12,8 +12,8 @@ public class OrderCartTestUtil {
     public static ValidatableResponse createRequestPost(String url, Object body, HttpStatus httpStatus) {
         return RestAssured.given()
         .spec(requestSpecification(body))
-        .log()
-        .all()
+        //.log()
+        //.all()
         .when().
                 post(url)
         .then().
