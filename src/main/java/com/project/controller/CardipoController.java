@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/cardapio")
-public class CardipoController {
+public class CardipoController extends ControllerBase{
 
     private CardapioService cardapioService;
 

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+//@Component
 public class AppStartupRunner implements ApplicationRunner {
 
     private MesaRepository mesaRepository;

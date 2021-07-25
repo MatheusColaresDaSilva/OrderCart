@@ -13,22 +13,22 @@ public class IntegrationBaseTest {
     private int port;
 
     @Autowired
-    private CardapioItemRepository cardapioItemRepository;
+    protected CardapioItemRepository cardapioItemRepository;
 
     @Autowired
-    private CardapioRepository cardapioRepository;
+    protected CardapioRepository cardapioRepository;
 
     @Autowired
-    private ItemRepository itemRepository;
+    protected ItemRepository itemRepository;
 
     @Autowired
-    private MesaRepository mesaRepository;
+    protected MesaRepository mesaRepository;
 
     @Autowired
-    private PedidoItemRepository pedidoItemRepository;
+    protected PedidoItemRepository pedidoItemRepository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    protected PedidoRepository pedidoRepository;
 
     @BeforeEach
     public void before() {
