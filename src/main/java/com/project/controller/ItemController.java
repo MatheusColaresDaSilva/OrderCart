@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/item")
-public class ItemController {
+public class ItemController extends ControllerBase{
 
     private ItemService itemService;
 

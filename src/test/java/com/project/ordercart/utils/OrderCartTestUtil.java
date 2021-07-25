@@ -9,6 +9,16 @@ import org.springframework.http.HttpStatus;
 
 public class OrderCartTestUtil {
 
+
+    public static ValidatableResponse createRequestGet(String url, RequestSpecification requestSpecification, HttpStatus httpStatus) {
+        return RestAssured.given()
+                .spec(requestSpecification)
+                .when().
+                        get(url)
+                .then().
+                        statusCode(httpStatus.value());
+    }
+
     public static ValidatableResponse createRequestPost(String url, Object body, HttpStatus httpStatus) {
         return RestAssured.given()
         .spec(requestSpecification(body))
@@ -18,6 +28,23 @@ public class OrderCartTestUtil {
                 post(url)
         .then().
                 statusCode(httpStatus.value());
+    }
+
+    public static ValidatableResponse createRequestPost(String url, HttpStatus httpStatus) {
+        return RestAssured.given()
+                .when().
+                        post(url)
+                .then().
+                        statusCode(httpStatus.value());
+    }
+
+    public static ValidatableResponse createRequestPut(String url, Object body, HttpStatus httpStatus) {
+        return RestAssured.given()
+                .spec(requestSpecification(body))
+                .when().
+                        put(url)
+                .then().
+                        statusCode(httpStatus.value());
     }
 
     private static RequestSpecification requestSpecification(Object body) {
