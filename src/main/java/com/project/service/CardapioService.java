@@ -10,7 +10,6 @@ import com.project.entity.Item;
 import com.project.enumerator.SituacaoCardapio;
 import com.project.exception.BusinessException;
 import com.project.repository.CardapioRepository;
-import com.project.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +17,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 @Service
 public class CardapioService {
 
     private CardapioRepository cardapioRepository;
-    private ItemRepository itemRepository;
+    private ItemService itemService;
 
-    public CardapioService(CardapioRepository cardapioRepository, ItemRepository itemRepository) {
+    public CardapioService(CardapioRepository cardapioRepository, ItemService itemService) {
         this.cardapioRepository = cardapioRepository;
-        this.itemRepository = itemRepository;
+        this.itemService = itemService;
     }
 
     public List<CardapioResponseDTO> consultaTodos() {
@@ -53,7 +50,7 @@ public class CardapioService {
 
     @Transactional
     public CardapioResponseDTO atualiza(Long idCardapio, CardapioResquestDTO cardapioResquestDTO) {
-        validaAtualizacao(idCardapio);
+        buscaPorId(idCardapio);
         Cardapio cardapio = cardapioDtoToEntity(buscaPorId(idCardapio), cardapioResquestDTO);
 
         return entityToCardapioDto(cardapioRepository.save(cardapio));
@@ -128,18 +125,11 @@ public class CardapioService {
                                         .valor(cardapioItem.getValor()).build();
     }
 
-    private Cardapio buscaPorId(Long id) {
+    public Cardapio buscaPorId(Long id) {
         return cardapioRepository.findById(id).orElseThrow(() -> new BusinessException("Cardápio não encontrado"));
     }
 
     private Item buscaItemPorId(Long id) {
-        return itemRepository.findById(id).orElseThrow(() -> new BusinessException("Item não encontrado"));
-    }
-
-    private void validaAtualizacao(Long idCardapio) {
-        Cardapio cardapio = buscaPorId(idCardapio);
-        if(isNull(cardapio)) {
-           throw new BusinessException("Cardápio não encontrado");
-        }
+        return itemService.buscaPorId(id);
     }
 }

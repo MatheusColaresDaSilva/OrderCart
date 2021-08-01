@@ -6,9 +6,11 @@ import com.project.entity.Item;
 import com.project.exception.BusinessException;
 import com.project.repository.ItemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -30,8 +32,15 @@ public class ItemService {
         return entityToItemDto(item);
     }
 
+    @Transactional
     public ItemResponseDTO cadastraItem(ItemRequestDTO itemRequestDTO) {
         Item item = itemDtoToEntity(new Item(), itemRequestDTO);
+        return entityToItemDto(itemRepository.save(item));
+    }
+
+    @Transactional
+    public ItemResponseDTO atualizaItem(Long id, ItemRequestDTO itemRequestDTO) {
+        Item item = itemDtoToEntity(buscaPorId(id), itemRequestDTO);
         return entityToItemDto(itemRepository.save(item));
     }
 
@@ -47,7 +56,7 @@ public class ItemService {
                         .build();
     }
 
-    private Item buscaPorId(Long id) {
-        return itemRepository.findById(id).orElseThrow(() -> new BusinessException("Item não Encontrado"));
+    public Item buscaPorId(Long id) {
+        return itemRepository.findById(id).orElseThrow(() -> new BusinessException("Item não encontrado"));
     }
 }

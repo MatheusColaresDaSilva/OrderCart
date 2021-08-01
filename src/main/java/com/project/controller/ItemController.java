@@ -36,4 +36,11 @@ public class ItemController extends ControllerBase{
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(new ResponseDTO<>(itemResponseDTO));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDTO<ItemResponseDTO>> atualiza(@PathVariable Long id, @RequestBody ItemRequestDTO itemRequestDTO) {
+        final ItemResponseDTO itemResponseDTO = itemService.atualizaItem(id, itemRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseDTO<>(itemResponseDTO));
+    }
 }
