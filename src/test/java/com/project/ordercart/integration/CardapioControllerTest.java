@@ -186,14 +186,4 @@ public class CardapioControllerTest extends IntegrationBaseTest{
                 .valor(BigDecimal.valueOf(30)).build();
     }
 
-    private void createItem() {
-        Item item1 = Item.builder().descricao("Frango a Passarinho").build();
-        itemRepository.save(item1);
-    }
-
-    private void assertMensagemErro(ResponseDTO<CardapioResponseDTO> response, String mesagem) {
-        MatcherAssert.assertThat(response.getErros(), Matchers.hasSize(1));
-        ErroResponseDTO erroResponseDTO = response.getErros().stream().findFirst().get();
-        MatcherAssert.assertThat(erroResponseDTO.getMensagem(),Matchers.equalTo(mesagem));
-    }
 }
