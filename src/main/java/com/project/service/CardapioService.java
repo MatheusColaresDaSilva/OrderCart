@@ -44,6 +44,11 @@ public class CardapioService {
 
     @Transactional
     public CardapioResponseDTO cadastra(CardapioResquestDTO cardapioResquestDTO) {
+
+        if(!validateIfThereIsAOpenCart()) {
+            throw new BusinessException("Já exite um Cardapio ativo.");
+        }
+
         final Cardapio cardapio = cardapioDtoToEntity(new Cardapio(), cardapioResquestDTO);
         return entityToCardapioDto(cardapioRepository.save(cardapio));
     }
@@ -71,6 +76,11 @@ public class CardapioService {
 
     @Transactional
     public void ativaCardapio(Long idCardapio) {
+        List<Cardapio> a = cardapioRepository.findAllActiveCartsExceptFor(idCardapio);
+        if(a.isEmpty()) {
+            throw new BusinessException("Já exite um Cardapio ativo.");
+        }
+
         Cardapio cardapio = buscaPorId(idCardapio);
 
         if(SituacaoCardapio.ATIVO.getCodigo().equals(cardapio.getSitucaoCardapio())) {
@@ -131,5 +141,9 @@ public class CardapioService {
 
     private Item buscaItemPorId(Long id) {
         return itemService.buscaPorId(id);
+    }
+
+    private Boolean validateIfThereIsAOpenCart() {
+        return cardapioRepository.findBySitucaoCardapio(SituacaoCardapio.ATIVO.getCodigo()).isEmpty();
     }
 }
