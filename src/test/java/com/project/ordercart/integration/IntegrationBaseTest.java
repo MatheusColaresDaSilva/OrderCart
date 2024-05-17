@@ -3,6 +3,7 @@ package com.project.ordercart.integration;
 import com.project.dto.response.ErroResponseDTO;
 import com.project.dto.response.ResponseDTO;
 import com.project.entity.Item;
+import com.project.entity.Mesa;
 import com.project.repository.*;
 import io.restassured.RestAssured;
 import org.hamcrest.MatcherAssert;
@@ -68,5 +69,10 @@ public class IntegrationBaseTest {
     protected void createItem() {
         Item item1 = Item.builder().descricao("Frango a Passarinho").build();
         itemRepository.save(item1);
+    }
+
+    protected void createMesa() {
+        Mesa mesa = Mesa.builder().numeroMesa(1).build();
+        mesaRepository.save(mesa);
     }
 }
