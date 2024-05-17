@@ -14,5 +14,5 @@ public class PedidoRequestDTO {
 
     private Long mesaId;
 
-    private List<PedidoRequestDTO> pedidoItens;
+    private List<PedidoItemDTO> pedidoItens;
 }
