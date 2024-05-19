@@ -9,5 +9,5 @@ import lombok.*;
 @ToString
 @Builder
 public class ItemRequestDTO {
-    private String descricao;
+    private String description;
 }

@@ -1,7 +1,6 @@
 package com.project.ordercart.integration;
 
 import com.project.dto.request.ItemRequestDTO;
-import com.project.dto.response.ErroResponseDTO;
 import com.project.dto.response.ItemResponseDTO;
 import com.project.dto.response.ResponseDTO;
 import com.project.entity.Item;
@@ -72,7 +71,7 @@ public class ItemControllerTest extends IntegrationBaseTest{
 
     private ItemRequestDTO criaItemResquestDTO() {
         return ItemRequestDTO.builder()
-                .descricao("Flat Iron").build();
+                .description("Flat Iron").build();
     }
 
 }
