@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemService {
@@ -45,7 +44,7 @@ public class ItemService {
     }
 
     private Item itemDtoToEntity(Item item, ItemRequestDTO itemRequestDTO) {
-        item.setDescricao(itemRequestDTO.getDescricao());
+        item.setDescricao(itemRequestDTO.getDescription());
         return item;
     }
 
