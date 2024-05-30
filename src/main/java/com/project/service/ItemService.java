@@ -5,6 +5,10 @@ import com.project.dto.response.ItemResponseDTO;
 import com.project.entity.Item;
 import com.project.exception.BusinessException;
 import com.project.repository.ItemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +22,12 @@ public class ItemService {
 
     public ItemService(ItemRepository itemRepository) { this.itemRepository = itemRepository; }
 
-    public List<ItemResponseDTO> consultaTodos() {
-        final List<Item> items = itemRepository.findAll();
+    public Page<ItemResponseDTO> consultaTodos(Pageable page) {
+        Page<Item> items = itemRepository.findAll(page);
         List<ItemResponseDTO> itemsResponseDTO = new ArrayList<ItemResponseDTO>();
         items.forEach(item -> itemsResponseDTO.add(entityToItemDto(item)));
 
-        return itemsResponseDTO;
+        return new PageImpl<>(itemsResponseDTO, page, items.getTotalElements());
     }
 
     public ItemResponseDTO consultaById(Long id) {
@@ -51,7 +55,7 @@ public class ItemService {
     private ItemResponseDTO entityToItemDto(Item item) {
         return ItemResponseDTO.builder()
                         .id(item.getId())
-                        .descricao(item.getDescricao())
+                        .description(item.getDescricao())
                         .build();
     }
 

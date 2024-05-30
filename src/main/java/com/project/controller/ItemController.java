@@ -4,6 +4,8 @@ import com.project.dto.request.ItemRequestDTO;
 import com.project.dto.response.ItemResponseDTO;
 import com.project.dto.response.ResponseDTO;
 import com.project.service.ItemService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +22,14 @@ public class ItemController extends ControllerBase{
     public ItemController(ItemService itemService) { this.itemService = itemService; }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<ItemResponseDTO>>> consultaTodos() {
-        final List<ItemResponseDTO>  itemsResponseDTO = itemService.consultaTodos();
+    public ResponseEntity<ResponseDTO<Page<ItemResponseDTO>>> consultaTodos(Pageable page) {
+        final Page<ItemResponseDTO> itemsResponseDTO = itemService.consultaTodos(page);
         return ResponseEntity.ok(new ResponseDTO<>(itemsResponseDTO));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO<ItemResponseDTO>> consultaById(@PathVariable Long id) {
+
         final ItemResponseDTO itemResponseDTO = itemService.consultaById(id);
         return ResponseEntity.ok(new ResponseDTO<>(itemResponseDTO));
     }

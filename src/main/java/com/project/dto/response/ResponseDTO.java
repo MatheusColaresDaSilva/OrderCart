@@ -17,6 +17,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.*;
 public class ResponseDTO<T> {
 
     private T dados;
+    private int total;
     private List<ErroResponseDTO> erros;
 
     public ResponseDTO(T dados) {
