@@ -16,12 +16,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.*;
 @JsonInclude(Include.NON_NULL)
 public class ResponseDTO<T> {
 
-    private T dados;
-    private int total;
+    private T content;
     private List<ErroResponseDTO> erros;
 
-    public ResponseDTO(T dados) {
-        this.dados = dados;
+    public ResponseDTO(T content) {
+        this.content = content;
     }
 
     public static ResponseDTO<Object> comErros(List<ErroResponseDTO> erros){

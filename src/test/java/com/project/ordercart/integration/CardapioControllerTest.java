@@ -3,10 +3,8 @@ package com.project.ordercart.integration;
 import com.project.dto.request.CardapioItemRequestDTO;
 import com.project.dto.request.CardapioResquestDTO;
 import com.project.dto.response.CardapioResponseDTO;
-import com.project.dto.response.ErroResponseDTO;
 import com.project.dto.response.ResponseDTO;
 import com.project.entity.Cardapio;
-import com.project.entity.Item;
 import com.project.enumerator.SituacaoCardapio;
 import com.project.ordercart.utils.OrderCartTestUtil;
 import io.restassured.builder.RequestSpecBuilder;
@@ -72,7 +70,7 @@ public class CardapioControllerTest extends IntegrationBaseTest{
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {});
 
         RequestSpecification requestSpecification = new RequestSpecBuilder()
-                .addPathParam("id", response.getDados().getId())
+                .addPathParam("id", response.getContent().getId())
                 .build();
 
         OrderCartTestUtil.createRequestGet(URL+"/{id}",requestSpecification, HttpStatus.OK);
@@ -100,9 +98,9 @@ public class CardapioControllerTest extends IntegrationBaseTest{
         cardapioResquestDTO.setDataInicio(LocalDateTime.of(2021, 4, 1, 0, 0));
         cardapioResquestDTO.setDataFim(LocalDateTime.of(2021, 5, 1, 0, 0));
 
-        OrderCartTestUtil.createRequestPut(URL+"/"+response.getDados().getId(),cardapioResquestDTO, HttpStatus.OK)
+        OrderCartTestUtil.createRequestPut(URL+"/"+response.getContent().getId(),cardapioResquestDTO, HttpStatus.OK)
                 .root("dados")
-                .body("id",Matchers.is(response.getDados().getId().intValue()))
+                .body("id",Matchers.is(response.getContent().getId().intValue()))
                 .body("descricao", Matchers.equalTo("Descrição Nova Atualizado"))
                 .body("dataInicio",Matchers.equalTo("2021-04-01T00:00:00"))
                 .body("dataFim",Matchers.equalTo("2021-05-01T00:00:00"));
@@ -114,9 +112,9 @@ public class CardapioControllerTest extends IntegrationBaseTest{
         ResponseDTO<CardapioResponseDTO> response = OrderCartTestUtil.createRequestPost(URL, cardapioResquestDTO, HttpStatus.CREATED)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {});
 
-        OrderCartTestUtil.createRequestPost(URL+"/"+response.getDados().getId()+"/desativar", HttpStatus.NO_CONTENT);
+        OrderCartTestUtil.createRequestPost(URL+"/"+response.getContent().getId()+"/desativar", HttpStatus.NO_CONTENT);
 
-        final Cardapio cardapio = cardapioRepository.findById(response.getDados().getId()).get();
+        final Cardapio cardapio = cardapioRepository.findById(response.getContent().getId()).get();
         MatcherAssert.assertThat(cardapio.getSitucaoCardapio(), Matchers.equalTo(SituacaoCardapio.DESABILITADO.getCodigo()));
     }
 
@@ -126,10 +124,10 @@ public class CardapioControllerTest extends IntegrationBaseTest{
         ResponseDTO<CardapioResponseDTO> response = OrderCartTestUtil.createRequestPost(URL, cardapioResquestDTO, HttpStatus.CREATED)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {});
 
-        OrderCartTestUtil.createRequestPost(URL+"/"+response.getDados().getId()+"/desativar", HttpStatus.NO_CONTENT);
-        OrderCartTestUtil.createRequestPost(URL+"/"+response.getDados().getId()+"/ativar", HttpStatus.NO_CONTENT);
+        OrderCartTestUtil.createRequestPost(URL+"/"+response.getContent().getId()+"/desativar", HttpStatus.NO_CONTENT);
+        OrderCartTestUtil.createRequestPost(URL+"/"+response.getContent().getId()+"/ativar", HttpStatus.NO_CONTENT);
 
-        final Cardapio cardapio = cardapioRepository.findById(response.getDados().getId()).get();
+        final Cardapio cardapio = cardapioRepository.findById(response.getContent().getId()).get();
         MatcherAssert.assertThat(cardapio.getSitucaoCardapio(), Matchers.equalTo(SituacaoCardapio.ATIVO.getCodigo()));
     }
 
@@ -139,8 +137,8 @@ public class CardapioControllerTest extends IntegrationBaseTest{
         ResponseDTO<CardapioResponseDTO> response = OrderCartTestUtil.createRequestPost(URL, cardapioResquestDTO, HttpStatus.CREATED)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {});
 
-        OrderCartTestUtil.createRequestPost(URL+"/"+response.getDados().getId()+"/desativar", HttpStatus.NO_CONTENT);
-        ResponseDTO<CardapioResponseDTO> responseAposDestivar = OrderCartTestUtil.createRequestPost(URL + "/" + response.getDados().getId() + "/desativar", HttpStatus.BAD_REQUEST)
+        OrderCartTestUtil.createRequestPost(URL+"/"+response.getContent().getId()+"/desativar", HttpStatus.NO_CONTENT);
+        ResponseDTO<CardapioResponseDTO> responseAposDestivar = OrderCartTestUtil.createRequestPost(URL + "/" + response.getContent().getId() + "/desativar", HttpStatus.BAD_REQUEST)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {
                 });
 
@@ -153,7 +151,7 @@ public class CardapioControllerTest extends IntegrationBaseTest{
         ResponseDTO<CardapioResponseDTO> response = OrderCartTestUtil.createRequestPost(URL, cardapioResquestDTO, HttpStatus.CREATED)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {});
 
-        ResponseDTO<CardapioResponseDTO> responseAposDestivar = OrderCartTestUtil.createRequestPost(URL + "/" + response.getDados().getId() + "/ativar", HttpStatus.BAD_REQUEST)
+        ResponseDTO<CardapioResponseDTO> responseAposDestivar = OrderCartTestUtil.createRequestPost(URL + "/" + response.getContent().getId() + "/ativar", HttpStatus.BAD_REQUEST)
                 .extract().body().as(new TypeRef<ResponseDTO<CardapioResponseDTO>>() {
                 });
 
